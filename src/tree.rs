@@ -37,4 +37,53 @@ impl Tree {
             }),
         }
     }
+
+    pub fn search(&self, key: Key) -> Option<&Value> {
+        match &self.root {
+            Node::Internal(_) => None, // None for now
+            Node::Leaf(leaf) => {
+                for (i, k) in leaf.keys.iter().enumerate() {
+                    if *k == key {
+                        return Some(&leaf.values[i]);
+                    }
+                }
+                None
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_search_existing_key() {
+        let leaf = LeafNode {
+            keys: vec![1, 2],
+            values: vec!["hello".to_string(), "world!".to_string()],
+            next: None,
+        };
+        let tree = Tree {
+            root: Node::Leaf(leaf),
+        };
+
+        let result = tree.search(2);
+        assert_eq!(result.map(|s| s.as_str()), Some("world!"));
+    }
+
+    #[test]
+    fn test_search_nonexistent_key() {
+        let leaf = LeafNode {
+            keys: vec![1, 2],
+            values: vec!["hello".to_string(), "world!".to_string()],
+            next: None,
+        };
+        let tree = Tree {
+            root: Node::Leaf(leaf),
+        };
+
+        let result = tree.search(3);
+        assert_eq!(result, None);
+    }
 }
