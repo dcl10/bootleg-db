@@ -8,7 +8,6 @@ type Value = String;
 struct InternalNode {
     keys: Vec<Key>,
     values: Vec<Value>,
-    is_leaf: bool,
 }
 
 #[derive(Debug)]
@@ -21,9 +20,21 @@ struct LeafNode {
 #[derive(Debug)]
 enum Node {
     Internal(InternalNode),
-    Leaf(LeafNode)
+    Leaf(LeafNode),
 }
 
 pub struct Tree {
     root: Node,
+}
+
+impl Tree {
+    pub fn new() -> Tree {
+        Tree {
+            root: Node::Leaf(LeafNode {
+                keys: vec![],
+                values: vec![],
+                next: None,
+            }),
+        }
+    }
 }
